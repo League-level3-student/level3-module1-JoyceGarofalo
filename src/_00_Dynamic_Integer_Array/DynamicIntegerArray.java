@@ -80,17 +80,26 @@ public class DynamicIntegerArray {
 	//9. Complete the steps in the remove method
 	public void remove(int location) {
 		//A. create a new array that is one element smaller than the member array
-		
+		int[] remove = new int[priv.length-1];
 		//B. make a for loop to iterate through the member array
-		
+		for (int i = 0; i < priv.length; i++) {
 			//C. if i  is less than location
 			//		set the element at i of the new array to the element at i of the member array
-			
+			if(i<location) {
+				remove[i]=priv[i];
+			}
+			else if(i>location) {
+				remove[i-1]=priv[i];
+			}
+			else {
+				continue;
+			}
 			//D. else if i  is greater than location
 			//		set the element at i - 1 of the new array to the element at i of the member array
 			
 			//E. else, continue;
-			
+		}
+		priv=remove;
 		//F. set the member array equal to the new array
 	}
 	
@@ -98,12 +107,13 @@ public class DynamicIntegerArray {
 	
 	//11. Complete the size method so that it returns the length of the member array.
 	public int size() {
-		return 0;
+		return priv.length;
 	}
 	
 	//12. Complete the clear array so that it sets the member array 
 	//    equal to a new integer array of size 0
 	public void clear() {
+		priv = new int[0];
 	}
 	
 	//13. Run the test again to see if you are finished.
