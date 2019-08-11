@@ -53,13 +53,14 @@ public class _02_TextUndoRedo implements KeyListener{
 			label.setText(label.getText().substring(0,label.getText().length()-1));
 			frame.pack();
 		}
+		else if(e.getKeyChar() == KeyEvent.VK_ENTER && !stack.isEmpty()) {
+			label.setText(label.getText() + stack.pop());
+		}
 		else {
 			label.setText(label.getText() + e.getKeyChar());
 			frame.pack();
 		}
-		if(e.getKeyChar() == KeyEvent.VK_ENTER && !stack.isEmpty()) {
-			label.setText(label.getText() + stack.pop());
-		}
+		
 		
 	}
 
