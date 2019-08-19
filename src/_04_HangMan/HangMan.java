@@ -16,6 +16,9 @@ public class HangMan implements KeyListener{
 	JPanel panel = new JPanel();
 	JLabel label = new JLabel();
 	JLabel lives = new JLabel();
+	JLabel guesses = new JLabel();
+	int life = 10;
+	Boolean guessiscorrect;
 	static Stack<String> words = new Stack<String>();
 	static ArrayList<String> underscores = new ArrayList<String>();
 	String currentWord;
@@ -24,6 +27,9 @@ public class HangMan implements KeyListener{
 		frame.add(panel);
 		panel.add(label);
 		panel.add(lives);
+		panel.add(guesses);
+		guesses.setText("guess any letter");
+		lives.setText("lives: " + life);
 		frame.setSize(200,200);
 		frame.addKeyListener(this);
 		
@@ -44,7 +50,7 @@ public class HangMan implements KeyListener{
 			
 		}
 		currentWord = words.pop();
-		System.out.println(currentWord);
+		//System.out.println(currentWord);
 		for (int j = 0; j < currentWord.length(); j++) {
 			underscores.add("_");
 			
@@ -54,43 +60,56 @@ public class HangMan implements KeyListener{
 		//words.pop();
 		
 		labelText();
-		String guess = JOptionPane.showInputDialog("Guess any letter");
-		checkForLetter(guess.charAt(0));
-		labelText();
+		
 		
 		
 	}
 	
 	
-	public void labelText() {
+	public void labelText() { //sets the label to underscores and fills with letters
 		String text = "";
 		for (int i = 0; i < underscores.size(); i++) {
 			text += underscores.get(i) + " ";
+			
 		}
 		label.setText(text);
-	
+		
 		
 	}
 	
-	public void checkForLetter(char guess) {
+	public void checkForLetter(char guess) { //checks if guess is in the word
+		guessiscorrect = false;
 		for (int i = 0; i < currentWord.length(); i++) {
 			if(currentWord.charAt(i) == guess) {
-				underscores.set(i, guess + "") ;
+				underscores.set(i, guess + "");
+				guessiscorrect = true;
 			}
+		
+		}
+		if(guessiscorrect == false) {
+			life -= 1;
+			lives.setText("lives: " + life);
+		}
+		else {
 			
 		}
+		labelText();
 	}
 
+	
+	
+	
+	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+		checkForLetter(e.getKeyChar());
+
 	}
 
 	@Override
