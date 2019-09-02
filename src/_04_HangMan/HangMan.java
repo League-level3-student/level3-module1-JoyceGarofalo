@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,26 +21,60 @@ public class HangMan implements KeyListener{
 	JFrame end = new JFrame();
 	JPanel endp = new JPanel();
 	JLabel endl = new JLabel();
+	JFrame win = new JFrame();
+	JPanel winp = new JPanel();
+	JLabel winl = new JLabel();
+	
+	JLabel playAgain = new JLabel();
+	JButton no = new JButton();
+	JButton yes = new JButton();
+	
+	Boolean Y = false;
+	Boolean N = false;
 	int life = 10;
-	int lettersGuessed = 0;
 	Boolean guessiscorrect;
 	static Stack<String> words = new Stack<String>();
 	static ArrayList<String> underscores = new ArrayList<String>();
 	String currentWord;
 	
 	public HangMan() {
+		
+		frame.addKeyListener(this);
+		frame.setSize(200,200);
 		frame.add(panel);
 		panel.add(label);
 		panel.add(lives);
 		panel.add(guesses);
+		panel.add(playAgain);
+		panel.add(yes);
+		panel.add(no);
+		
+		end.addKeyListener(this);
+		end.setSize(200,200);
 		end.add(endp);
 		endp.add(endl);
+		endp.add(playAgain);
+		end.add(yes);
+		end.add(no);
 		endl.setText("Game Over");
-		end.setSize(200,200);
+		
+		win.addKeyListener(this);
+		win.setSize(200,200);
+		win.add(winp);
+		winp.add(winl);
+		winp.add(playAgain);
+		winl.setText("Congratulations!");
+		
 		guesses.setText("guess any letter");
 		lives.setText("lives: " + life);
-		frame.setSize(200,200);
-		frame.addKeyListener(this);
+		playAgain.setText("Would you like to play again?");
+		yes.setText("yes");
+		no.setText("no");
+		
+		playAgain.setVisible(false);
+		yes.setVisible(false);
+		no.setVisible(false);
+		
 		
 	}
 	
@@ -60,6 +95,7 @@ public class HangMan implements KeyListener{
 	}
 	
 	public void wordSetup() { //sets up frame
+		life = 10;
 		currentWord = words.pop();
 		System.out.println(currentWord);
 		for (int j = 0; j < currentWord.length(); j++) {
@@ -105,11 +141,53 @@ public class HangMan implements KeyListener{
 			lives.setText("lives: " + life);
 		}
 		else {
-			lettersGuessed += 1;					//adds repeating letters which is not good
-			System.out.println(lettersGuessed);
+			
 		}
 		labelText();
+		int underscoreCount = 0;
+		for (int i = 0; i < underscores.size(); i++) {
+			if(underscores.get(i).equals("_")) {
+				underscoreCount += 1;
+			}
+		}
+		if(underscoreCount > 0 && life > 0) {
 			
+		}
+		else if(underscoreCount == 0 && life > 0){
+			life = 10;
+			lives.setText("lives: " + life);
+			underscores.clear();
+			wordSetup();
+			if(words.isEmpty() == true) {
+				frame.setVisible(false);
+				win.setVisible(true);
+				playAgain.setVisible(true);               //play again window doesnt pop up
+				yes.setVisible(true);
+				no.setVisible(true);
+				if(Y == true) {
+					setup();
+				}
+				if(N == true) {
+					System.exit(0);
+				}
+			}
+		}
+		else if(underscoreCount > 0 && life == 0){        //play again window doesnt pop up
+			frame.setVisible(false);
+			end.setVisible(true);
+			playAgain.setVisible(true);
+			yes.setVisible(true);
+			no.setVisible(true);
+			/*
+			if(Y == true) {
+				setup();
+			}
+			if(N == true) {
+				System.exit(0);
+			}*/
+		}
+		
+		/*
 		if(lettersGuessed == currentWord.length() && life > 0) { //changes to next word
 			
 			//System.out.println(label);
@@ -122,6 +200,7 @@ public class HangMan implements KeyListener{
 			frame.setVisible(false);
 			end.setVisible(true);
 		}
+		*/
 	}
 
 	
@@ -137,6 +216,12 @@ public class HangMan implements KeyListener{
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		checkForLetter(e.getKeyChar());
+		if(e.getSource() == yes) {
+			Y = true;
+		}
+		if(e.getSource() == no) {
+			N = true;
+		}
 
 	}
 
