@@ -1,6 +1,8 @@
 package _04_HangMan;
 
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class HangMan implements KeyListener{
+public class HangMan implements KeyListener, ActionListener{
 	JFrame frame = new JFrame();
 	JPanel panel = new JPanel();
 	JLabel label = new JLabel();
@@ -24,6 +26,10 @@ public class HangMan implements KeyListener{
 	JFrame win = new JFrame();
 	JPanel winp = new JPanel();
 	JLabel winl = new JLabel();
+	
+	JLabel playAgain_e = new JLabel();
+	JButton no_e = new JButton();
+	JButton yes_e = new JButton();
 	
 	JLabel playAgain = new JLabel();
 	JButton no = new JButton();
@@ -45,6 +51,9 @@ public class HangMan implements KeyListener{
 		panel.add(label);
 		panel.add(lives);
 		panel.add(guesses);
+		panel.add(playAgain_e);
+		panel.add(yes_e);
+		panel.add(no_e);
 		panel.add(playAgain);
 		panel.add(yes);
 		panel.add(no);
@@ -53,9 +62,9 @@ public class HangMan implements KeyListener{
 		end.setSize(200,200);
 		end.add(endp);
 		endp.add(endl);
-		endp.add(playAgain);
-		end.add(yes);
-		end.add(no);
+		endp.add(playAgain_e);
+		endp.add(yes_e);
+		endp.add(no_e);
 		endl.setText("Game Over");
 		
 		win.addKeyListener(this);
@@ -63,17 +72,27 @@ public class HangMan implements KeyListener{
 		win.add(winp);
 		winp.add(winl);
 		winp.add(playAgain);
+		winp.add(yes);
+		winp.add(no);
 		winl.setText("Congratulations!");
 		
 		guesses.setText("guess any letter");
 		lives.setText("lives: " + life);
+		playAgain_e.setText("Would you like to play again?");
+		yes_e.setText("yes");
+		no_e.setText("no");
 		playAgain.setText("Would you like to play again?");
 		yes.setText("yes");
 		no.setText("no");
 		
-		playAgain.setVisible(false);
-		yes.setVisible(false);
-		no.setVisible(false);
+		no.addActionListener(this);
+		yes.addActionListener(this);
+		no_e.addActionListener(this);
+		yes_e.addActionListener(this);
+		
+		
+		//yes.setVisible(false);
+		//no.setVisible(false);
 		
 		
 	}
@@ -86,7 +105,7 @@ public class HangMan implements KeyListener{
 	public void setup() { //picks words
 		String word = JOptionPane.showInputDialog("Welcome to Hangman! \n How many words would you like to guess?");
 		int num = Integer.parseInt(word);
-		for (int i = 0; i < num; i++) {
+		for (int i = 0; i < num + 1; i++) {
 			String s = Utilities.readRandomLineFromFile("dictionary.txt");
 			words.add(s);
 		}
@@ -161,30 +180,20 @@ public class HangMan implements KeyListener{
 			if(words.isEmpty() == true) {
 				frame.setVisible(false);
 				win.setVisible(true);
-				playAgain.setVisible(true);               //play again window doesnt pop up
-				yes.setVisible(true);
-				no.setVisible(true);
-				if(Y == true) {
-					setup();
-				}
-				if(N == true) {
-					System.exit(0);
-				}
+				//playAgain.setVisible(true);               
+				//yes.setVisible(true);
+				//no.setVisible(true);
+				
 			}
 		}
-		else if(underscoreCount > 0 && life == 0){        //play again window doesnt pop up
+		else if(underscoreCount > 0 && life == 0){        
 			frame.setVisible(false);
 			end.setVisible(true);
-			playAgain.setVisible(true);
-			yes.setVisible(true);
-			no.setVisible(true);
-			/*
-			if(Y == true) {
-				setup();
-			}
-			if(N == true) {
-				System.exit(0);
-			}*/
+			//playAgain.setVisible(true);
+			//yes.setVisible(true);
+			//no.setVisible(true);
+			
+			
 		}
 		
 		/*
@@ -216,18 +225,41 @@ public class HangMan implements KeyListener{
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		checkForLetter(e.getKeyChar());
-		if(e.getSource() == yes) {
-			Y = true;
-		}
-		if(e.getSource() == no) {
-			N = true;
-		}
-
+		
+		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		//System.out.println("e");
+		if(e.getSource() == yes_e) {
+			setup();
+			life = 10;
+			lives.setText("lives: " + life);
+			underscores.clear();
+
+		}
+		else if(e.getSource() == no_e) {
+			System.exit(0);
+		}
+		if(e.getSource() == yes) {
+			setup();
+			life = 10;
+			lives.setText("lives: " + life);
+			underscores.clear();
+
+		}
+		else if(e.getSource() == no) {
+			System.exit(0);;
+		}
+
 		
 	}
 	
